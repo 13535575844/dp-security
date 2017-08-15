@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>新增-菜单管理</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<ul id="macroTree" class="ztree"></ul>
+	</div>
+	#parse("include/footer.html")
+	<script type="text/javascript">
+	var setting = {
+		data : {
+			simpleData : {
+				enable : true,
+				idKey : "macroId",
+				pIdKey : "typeId",
+				rootPId : -1
+			},
+			key : {
+				url : "nourl"
+			}
+		}
+	};
+	var ztree;
+
+	var vm = new Vue({
+		el : '#dpLTE',
+		methods : {
+			getMacro : function(menuId) {
+				$.get('../../sys/macro/select', function(r) {
+					ztree = $.fn.zTree
+							.init($("#macroTree"), setting, r);
+					var node = ztree.getNodeByParam("macroId", top.layerForm.vm.macro.typeId);
+					ztree.selectNode(node);
+					top.layerForm.vm.macro.typeName = node.name;
+				})
+			},
+			acceptClick: function() {
+				var node = ztree.getSelectedNodes();
+				top.layerForm.vm.macro.typeId = node[0].macroId;
+				top.layerForm.vm.macro.typeName = node[0].name;
+				dialogClose();
+			}
+		},
+		created : function() {
+			this.getMacro();
+		}
+	})
+	</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>新增-菜单管理</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<ul id="menuTree" class="ztree"></ul>
+	</div>
+	#parse("include/footer.html")
+	<script type="text/javascript">
+	var setting = {
+		data : {
+			simpleData : {
+				enable : true,
+				idKey : "menuId",
+				pIdKey : "parentId",
+				rootPId : -1
+			},
+			key : {
+				url : "nourl"
+			}
+		}
+	};
+	var ztree;
+
+	var vm = new Vue({
+		el : '#dpLTE',
+		methods : {
+			getMenu : function(menuId) {
+				$.get('../../sys/menu/select', function(r) {
+					ztree = $.fn.zTree
+							.init($("#menuTree"), setting, r.rows);
+					var node = ztree.getNodeByParam("menuId", top.layerForm.vm.menu.parentId);
+					ztree.selectNode(node);
+					top.layerForm.vm.menu.parentName = node.name;
+				})
+			},
+			acceptClick: function() {
+				var node = ztree.getSelectedNodes();
+				top.layerForm.vm.menu.parentId = node[0].menuId;
+				top.layerForm.vm.menu.parentName = node[0].name;
+				dialogClose();
+			}
+		},
+		created : function() {
+			this.getMenu();
+		}
+	})
+	</script>
+</body>
+</html>

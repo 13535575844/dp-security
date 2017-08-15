@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>重置密码-用户管理</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<table class="form" id="form">
+			<tr>
+	            <td class="formTitle">新密码<font face="宋体">*</font></td>
+	            <td class="formValue">
+					<input type="text" class="form-control" placeholder="新密码" v-model="user.password" isvalid="yes" checkexpession="NotNull">
+	            </td>
+        	</tr>
+		</table>
+	</div>
+	#parse("include/footer.html")
+	<script type="text/javascript">
+	var vm = new Vue({
+		el:'#dpLTE',
+		data: {
+			user: {}
+		},
+		methods : {
+			acceptClick: function() {
+				if (!$('#form').Validform()) {
+			        return false;
+			    }
+			    $.ConfirmForm({
+			    	url: '../../sys/user/reset',
+			    	param: vm.user,
+			    	success: function(data) {
+			    		
+			    	}
+			    });
+			}
+		}
+	})
+	</script>
+</body>
+</html>

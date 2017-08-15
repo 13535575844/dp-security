@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.chenlin.dp.shiro.dao.SysUserRoleMapper">
+	
+	<insert id="save">
+		INSERT INTO sys_user_role (`user_id`, `role_id`)
+		VALUES
+		<foreach collection="roleIdList" item="item" index="index" separator="," >
+		(
+			#{userId}, 
+			#{item}
+		)
+		</foreach>
+	</insert>
+	
+	<delete id="remove">
+		DELETE
+		FROM
+			sys_user_role
+		WHERE
+			user_id = #{value}
+	</delete>
+	
+	<delete id="batchRemoveByUserId">
+		DELETE
+		FROM
+			sys_user_role
+		WHERE
+			user_id IN
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+	
+	<delete id="batchRemoveByRoleId">
+		DELETE
+		FROM
+			sys_user_role
+		WHERE
+			role_id IN
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
+	
+	<select id="listUserRoleId" resultType="long">
+		SELECT
+			role_id
+		FROM
+			sys_user_role
+		WHERE
+			user_id = #{value}
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>系统菜单</title>
+#parse("include/header.html")
+</head>
+<body>
+<div id="dpLTE" class="container-fluid" v-cloak>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="btn-toolbar">
+				<div class="btn-group">
+		            <a v-if="hasPermission('sys:menu:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
+		            <a v-if="hasPermission('sys:menu:save')" class="btn btn-default" @click="save"><i class="fa fa-plus"></i>&nbsp;新增</a>
+		            <a v-if="hasPermission('sys:menu:edit')" class="btn btn-default" @click="edit"><i class="fa fa-pencil-square-o"></i>&nbsp;编辑</a>
+		            <a v-if="hasPermission('sys:menu:remove')" class="btn btn-default" @click="remove"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		        </div>
+	        </div>
+		</div>
+	</div>
+	<div class="row">
+		<table id="dataGrid"></table>
+	</div>
+</div>
+#parse("include/footer.html")
+<script src="${rc.contextPath}/statics/js/base/menu/list.js?_${date.systemTime}"></script>
+</body>
+</html>

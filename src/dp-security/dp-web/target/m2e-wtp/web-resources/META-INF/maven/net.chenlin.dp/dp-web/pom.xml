@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>net.chenlin.dp</groupId>
+    <artifactId>dp-security</artifactId>
+    <version>${dp-version}</version>
+  </parent>
+  <artifactId>dp-web</artifactId>
+  <packaging>war</packaging>
+  <name>dp-web Maven Webapp</name>
+  <url>http://chenlintech.com</url>
+  <description>管理后台</description>
+  
+  <dependencies>
+    
+    <dependency>
+      <groupId>net.chenlin.dp</groupId>
+      <artifactId>dp-common</artifactId>
+      <version>${dp-version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.chenlin.dp</groupId>
+      <artifactId>dp-shiro</artifactId>
+      <version>${dp-version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.chenlin.dp</groupId>
+      <artifactId>dp-orm</artifactId>
+      <version>${dp-version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.chenlin.dp</groupId>
+      <artifactId>dp-base</artifactId>
+      <version>${dp-version}</version>
+    </dependency>
+    
+  </dependencies>
+  
+  <build>
+    <finalName>dp-security</finalName>
+  </build>
+  
+</project>

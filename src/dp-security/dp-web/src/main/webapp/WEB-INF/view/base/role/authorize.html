@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>分配权限-角色管理</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<ul id="menuTree" class="ztree"></ul>
+	</div>
+	#parse("include/footer.html")
+	<script type="text/javascript">
+	var setting = {
+		data : {
+			simpleData : {
+				enable : true,
+				idKey : "menuId",
+				pIdKey : "parentId",
+				rootPId : -1
+			},
+			key : {
+				url : "nourl"
+			}
+		},
+		check:{
+			enable:true,
+			nocheckInherit:true
+		}
+	};
+	var ztree;
+
+	var vm = new Vue({
+		el : '#dpLTE',
+		data : {
+			role : {}
+		},
+		methods : {
+			getMenu : function(menuId) {
+				$.get('../../sys/menu/list?_' + $.now(), function(r) {
+					ztree = $.fn.zTree
+							.init($("#menuTree"), setting, r);
+					ztree.expandAll(true);
+				})
+			},
+			setForm: function() {
+				$.SetForm({
+					url: '../../sys/role/info',
+			    	param: vm.role.roleId,
+			    	success: function(data) {
+			    		vm.role = data;
+			    		//勾选角色所拥有的菜单
+		    			var menuIds = vm.role.menuIdList;
+		    			for(var i=0; i<menuIds.length; i++) {
+		    				var node = ztree.getNodeByParam("menuId", menuIds[i]);
+		    				ztree.checkNode(node, true, false);
+		    			}
+			    	}
+				});
+			},
+			acceptClick: function() {
+				var nodes = ztree.getCheckedNodes(true);
+				var menuIdList = new Array();
+				for(var i=0; i<nodes.length; i++) {
+					menuIdList.push(nodes[i].menuId);
+				}
+				vm.role.menuIdList = menuIdList;
+				$.ConfirmForm({
+			    	url: '../../sys/role/authorize?_' + $.now(),
+			    	param: vm.role,
+			    	success: function(data) {
+			    	}
+			    });
+			}
+		},
+		created : function() {
+			this.getMenu();
+		}
+	})
+	</script>
+</body>
+</html>

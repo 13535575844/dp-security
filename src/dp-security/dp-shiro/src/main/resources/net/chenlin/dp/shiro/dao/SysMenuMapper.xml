@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.chenlin.dp.shiro.dao.SysMenuMapper">
+	
+	<select id="list" resultType="SysMenuEntity">
+		SELECT
+			m.menu_id,
+			m.parent_id,
+			(
+				SELECT
+					p.name
+				FROM
+					sys_menu p
+				WHERE
+					p.menu_id = m.parent_id
+			) AS parentName,
+			m.name,
+			m.url,
+			m.perms,
+			m.type,
+			m.icon,
+			m.order_num
+		FROM
+			sys_menu m
+		ORDER BY
+			m.order_num ASC
+	</select>
+	
+	<select id="listNotButton" resultType="SysMenuEntity">
+		SELECT
+			menu_id,
+			parent_id,
+			name,
+			type
+		FROM
+			sys_menu
+		WHERE
+			type != 2
+		ORDER BY
+			order_num ASC
+	</select>
+	
+	<select id="listParentId" resultType="SysMenuEntity">
+		SELECT
+			menu_id,
+			parent_id,
+			name,
+			url,
+			type,
+			icon
+		FROM
+			sys_menu
+		WHERE
+			parent_id = #{parentId} order by order_num asc
+	</select>
+	
+	<insert id="save">
+		INSERT INTO sys_menu (
+			parent_id,
+			name,
+			url,
+			perms,
+			type,
+			icon,
+			order_num,
+			gmt_create
+		)
+		VALUES (
+			#{parentId},
+			#{name},
+			#{url},
+			#{perms},
+			#{type},
+			#{icon},
+			#{orderNum},
+			NOW()
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="SysMenuEntity">
+		SELECT
+			m.menu_id,
+			m.parent_id,
+			(
+				SELECT
+					p.name
+				FROM
+					sys_menu p
+				WHERE
+					p.menu_id = m.parent_id
+			) AS parentName,
+			m.name,
+			m.url,
+			m.perms,
+			m.type,
+			m.icon,
+			m.order_num
+		FROM
+			sys_menu m
+		WHERE
+			menu_id = #{value}
+	</select>
+	
+	<update id="update">
+		UPDATE sys_menu
+		<set> 
+			<if test="parentId != null">parent_id = #{parentId}, </if>
+			<if test="name != null">name = #{name}, </if>
+			<if test="url != null">url = #{url}, </if>
+			<if test="perms != null">perms = #{perms}, </if>
+			<if test="type != null">type = #{type}, </if>
+			<if test="icon != null">icon = #{icon}, </if>
+			<if test="orderNum != null">order_num = #{orderNum}, </if>
+			gmt_modified = NOW()
+		</set>
+		where menu_id = #{menuId}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			sys_menu
+		WHERE
+			menu_id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="listUserPerms" parameterType="long" resultType="string">
+		SELECT DISTINCT
+			m.perms
+		FROM
+			sys_user_role ur
+		LEFT JOIN sys_role_menu rm ON ur.role_id = rm.role_id
+		LEFT JOIN sys_menu m ON rm.menu_id = m.menu_id
+		WHERE
+			ur.user_id = #{value}
+		ORDER BY
+			m.order_num ASC
+	</select>
+
+</mapper>

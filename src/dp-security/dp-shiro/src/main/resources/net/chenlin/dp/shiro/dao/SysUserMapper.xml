@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.chenlin.dp.shiro.dao.SysUserMapper">
+	
+	<select id="listForPage" resultType="SysUserEntity">
+		SELECT
+			user_id,
+			username,
+			email,
+			mobile,
+			status,
+			gmt_create
+		FROM
+			sys_user
+		<where>
+			<if test="userIdCreate != null">
+				and user_id_create = #{userIdCreate} 
+			</if>
+			<if test="username != null and username.trim() != ''">
+				AND username LIKE concat('%',#{username},'%') 
+				OR email LIKE concat('%',#{username},'%') 
+				OR mobile LIKE concat('%',#{username},'%') 
+			</if>
+		</where>
+		ORDER BY 
+			user_id DESC
+	</select>
+	
+	<select id="getByUserName" resultType="SysUserEntity">
+		SELECT
+			user_id,
+			username,
+			password,
+			email,
+			mobile,
+			status
+		FROM
+			sys_user
+		WHERE
+			username = #{username}
+	</select>
+	
+	<select id="listAllMenuId" resultType="long">
+		SELECT DISTINCT
+			rm.menu_id
+		FROM
+			sys_user_role ur
+		LEFT JOIN sys_role_menu rm ON ur.role_id = rm.role_id
+		WHERE
+			ur.user_id = #{userId}
+	</select>
+	
+	<insert id="save" parameterType="SysUserEntity" useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO sys_user (
+			username,
+			password,
+			email,
+			mobile,
+			status,
+			user_id_create,
+			gmt_create
+		)
+		VALUES (
+			#{username},
+			#{password},
+			#{email},
+			#{mobile},
+			#{status},
+			#{userIdCreate},
+			NOW()
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="SysUserEntity">
+		SELECT
+			user_id,
+			username,
+			password,
+			email,
+			mobile,
+			status
+		FROM 
+			sys_user
+		WHERE
+			user_id = #{value}
+	</select>
+	
+	<update id="update">
+		UPDATE sys_user
+		<set> 
+			<if test="username != null">username = #{username}, </if>
+			<if test="email != null">email = #{email}, </if>
+			<if test="mobile != null">mobile = #{mobile}, </if>
+			<if test="status != null">status = #{status}, </if>
+			gmt_modified = NOW()
+		</set>
+		where user_id = #{userId}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			sys_user
+		WHERE
+			user_id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<update id="updatePswdByUser">
+		UPDATE sys_user
+		SET
+			password = #{newPswd}
+		WHERE
+			user_id = #{userId} AND password = #{pswd}
+	</update>
+	
+	<update id="updateUserStatus">
+		UPDATE sys_user
+		SET
+			status = #{status}
+		WHERE
+			user_id IN
+		<foreach item="userId" collection="id" open="(" separator="," close=")">
+			#{userId}
+		</foreach> 
+	</update>
+	
+	<update id="updatePswd">
+		UPDATE sys_user
+		SET
+			password = #{password}
+		WHERE
+			user_id = #{userId}
+	</update>
+
+</mapper>

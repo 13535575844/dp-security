@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.chenlin.dp.base.dao.SysMacroMapper">
+	
+	<select id="list" resultType="SysMacroEntity">
+		SELECT
+			m.macro_id,
+			m.type_id,
+			(
+				SELECT
+					p.name
+				FROM
+					sys_macro p
+				WHERE
+					p.macro_id = m.type_id
+			) AS typeName,
+			m.name,
+			m.value,
+			m.status,
+			m.type,
+			m.remark,
+			m.order_num
+		FROM
+			sys_macro m
+		ORDER BY
+			m.order_num ASC
+	</select>
+	
+	<select id="listNotMacro" resultType="SysMacroEntity">
+		SELECT
+			macro_id,
+			type_id,
+			name,
+			value
+		FROM
+			sys_macro
+		WHERE
+			type = 0
+		ORDER BY
+			order_num ASC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO sys_macro (
+			type_id,
+			name,
+			value,
+			status,
+			type,
+			order_num,
+			remark,
+			gmt_create
+		)
+		VALUES (
+			#{typeId},
+			#{name}, 
+			#{value}, 
+			#{status},
+			#{type},
+			#{orderNum}, 
+			#{remark}, 
+			now()
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="SysMacroEntity">
+		SELECT
+			m.macro_id,
+			m.type_id,
+			(
+				SELECT
+					p.name
+				FROM
+					sys_macro p
+				WHERE
+					p.macro_id = m.type_id
+			) AS typeName,
+			m.name,
+			m.value,
+			m.status,
+			m.type,
+			m.remark,
+			m.order_num
+		FROM
+			sys_macro m
+		WHERE
+			m.macro_id = #{macroId}
+	</select>
+	
+	<update id="update">
+		UPDATE sys_macro
+	 	<set> 
+			<if test="typeId != null">type_id = #{typeId}, </if>
+			<if test="name != null">name = #{name}, </if>
+			<if test="value != null">value = #{value}, </if>
+			<if test="status != null">status = #{status}, </if>
+			<if test="type != null">type = #{type}, </if>
+			<if test="orderNum != null">order_num = #{orderNum}, </if>
+			<if test="remark != null">remark = #{remark}, </if>
+			gmt_modified = NOW()
+		</set>
+		WHERE
+			macro_id = #{macroId}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			sys_macro
+		WHERE
+			macro_id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>新增-用户管理</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<table class="form" id="form">
+			<tr>
+	            <td class="formTitle">用户名<font face="宋体">*</font></td>
+	            <td class="formValue">
+					<input type="text" class="form-control" placeholder="用户名" v-model="user.username" isvalid="yes" checkexpession="NotNull">
+	            </td>
+	            <td class="formTitle">密码<font face="宋体">*</font></td>
+	            <td class="formValue">
+					<input type="text" class="form-control" placeholder="密码" v-model="user.password" isvalid="yes" checkexpession="NotNull">
+	            </td>
+        	</tr>
+        	<tr>
+        		<td class="formTitle">邮箱</td>
+	            <td class="formValue">
+					<input type="text" class="form-control" placeholder="邮箱" v-model="user.email">
+	            </td>
+	            <td class="formTitle">手机号</td>
+	            <td class="formValue">
+					<input type="text" class="form-control" placeholder="手机号" v-model="user.mobile">
+	            </td>
+        	</tr>
+        	<tr>
+        		<td class="formTitle">角色</td>
+	            <td class="formValue" colspan="3">
+					<label v-for="role in roleList" class="checkbox-inline">
+					  <input type="checkbox" :value="role.roleId" v-model="user.roleIdList">{{role.roleName}}
+					</label>
+	            </td>
+        	</tr>
+			<tr>
+				<td class="formTitle">状态</td>
+				<td class="formValue" colspan="3">
+					<label class="radio-inline">
+						<input type="radio" name="status" value="0" v-model="user.status"/> 禁用
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="status" value="1" v-model="user.status"/> 正常
+					</label>
+				</td>
+			</tr>
+		</table>
+	</div>
+	#parse("include/footer.html")
+	<script
+		src="${rc.contextPath}/statics/js/base/user/add.js?_${date.systemTime}"></script>
+</body>
+</html>

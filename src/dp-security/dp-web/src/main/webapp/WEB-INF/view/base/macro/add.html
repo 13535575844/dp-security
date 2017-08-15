@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>新增-通用字典</title>
+#parse("include/header.html")
+</head>
+<body>
+	<div id="dpLTE" class="container-fluid" v-cloak>
+		<table class="form" id="form">
+			<tr>
+	            <td class="formTitle">类型</td>
+	            <td class="formValue">
+					<label class="radio-inline"> <input type="radio"
+						name="type" value="0" v-model="macro.type" /> 目录
+					</label>
+					<label class="radio-inline"> <input type="radio"
+							name="type" value="1" v-model="macro.type" /> 参数
+					</label>
+				</td>
+        	</tr>
+        	<tr>
+	            <td class="formTitle">名称<font face="宋体">*</font></td>
+	            <td class="formValue">
+					<input type="text" class="form-control" v-model="macro.name" placeholder="目录名称或参数名称" isvalid="yes" checkexpession="NotNull"/>
+				</td>
+        	</tr>
+        	<tr>
+	            <td class="formTitle">英文代码</td>
+	            <td class="formValue">
+					<input type="text" class="form-control" v-model="macro.value" placeholder="类别编码或参数值" isvalid="yes" checkexpession="NotNull"/>
+				</td>
+        	</tr>
+        	<tr>
+	            <td class="formTitle">参数类型<font face="宋体">*</font></td>
+	            <td class="formValue">
+					<input type="text" class="form-control pointer" v-model="macro.typeName" @click="macroTree" readonly="readonly" placeholder="一级目录"/>
+				</td>
+        	</tr>
+        	<tr>
+	            <td class="formTitle">排序</td>
+	            <td class="formValue">
+					<input type="text" class="form-control" v-model="macro.orderNum" placeholder="排序" isvalid="yes" checkexpession="NotNull"/>
+				</td>
+        	</tr>
+        	<tr v-if="macro.type == 1">
+	            <td class="formTitle">备注</td>
+	            <td class="formValue">
+					<input type="text" class="form-control" v-model="macro.remark" placeholder="备注"/>
+				</td>
+        	</tr>
+        	<tr v-if="macro.type == 1">
+	            <td class="formTitle">状态</td>
+				<td class="formValue">
+					<label class="radio-inline">
+						<input type="radio" name="status" value="0" v-model="macro.status"/> 隐藏
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="status" value="1" v-model="macro.status"/> 显示
+					</label>
+				</td>
+        	</tr>
+		</table>
+	</div>
+	#parse("include/footer.html")
+	<script
+		src="${rc.contextPath}/statics/js/base/macro/add.js?_${date.systemTime}"></script>
+</body>
+</html>

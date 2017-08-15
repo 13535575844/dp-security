@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>系统日志</title>
+#parse("include/header.html")
+</head>
+<body>
+#if($shiro.hasPermission("sys:user:save"))
+有权限
+#end
+<div id="dpLTE" class="container-fluid" v-cloak>
+	<div class="row">
+		<div class="col-md-6 form-inline pull-left">
+			<div class="form-group">
+		    	<input v-model="keyword" @keyup.enter="load" class="form-control" placeholder="请输入查询关键字" style="width: 220px;" />
+			</div>
+			<div class="form-group">
+			    <a class="btn btn-primary" @click="load"><i class="fa fa-search"></i>&nbsp;查询</a>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="btn-toolbar pull-right">
+				<div class="btn-group">
+		            <a v-if="hasPermission('sys:log:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
+		            <a v-if="hasPermission('sys:log:remove')" class="btn btn-default" @click="remove"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		            <a v-if="hasPermission('sys:log:clear')" class="btn btn-default" @click="clear"><i class="fa fa-eraser"></i>&nbsp;清空</a>
+		        </div>
+	        </div>
+		</div>
+	</div>
+	<div class="row">
+		<table id="dataGrid"></table>
+	</div>
+</div>
+#parse("include/footer.html")
+<script src="${rc.contextPath}/statics/js/base/log/list.js?_${date.systemTime}"></script>
+</body>
+</html>

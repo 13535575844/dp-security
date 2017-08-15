@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.chenlin.dp.shiro.dao.SysRoleMapper">
+	
+	<select id="list" resultType="SysRoleEntity">
+		SELECT
+			role_id,
+			role_name
+		FROM
+			sys_role
+		ORDER BY
+			role_id ASC
+	</select>
+	
+	<select id="listForPage" resultType="SysRoleEntity">
+		SELECT
+			role_id,
+			role_name,
+			role_sign,
+			remark,
+			gmt_create
+		FROM
+			sys_role
+		<where>
+			<if test="userIdCreate != null">
+				and user_id_create = #{userIdCreate} 
+			</if>
+			<if test="roleName != null and roleName.trim() != ''">
+				AND role_name LIKE concat('%',#{roleName},'%') 
+			</if>
+		</where>
+		ORDER BY
+			role_id ASC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO sys_role (
+			role_name,
+			role_sign,
+			remark,
+			user_id_create,
+			gmt_create
+		)
+		VALUES (
+			#{roleName},
+			#{roleSign}, 
+			#{remark}, 
+			#{userIdCreate}, 
+			now()
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="SysRoleEntity">
+		SELECT
+			role_id,
+			role_name,
+			role_sign,
+			remark
+		FROM
+			sys_role
+		WHERE
+			role_id = #{roleId}
+	</select>
+	
+	<update id="update">
+		UPDATE sys_role
+	 	<set> 
+			<if test="roleName != null">role_name = #{roleName}, </if>
+			<if test="roleSign != null">role_sign = #{roleSign}, </if>
+			<if test="remark != null">remark = #{remark}, </if>
+			gmt_modified = NOW()
+		</set>
+		WHERE
+			role_id = #{roleId}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			sys_role
+		WHERE
+			role_id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="listUserRoles" parameterType="long" resultType="string">
+		SELECT DISTINCT
+			r.role_sign
+		FROM
+			sys_user_role ur
+		LEFT JOIN sys_role r ON ur.role_id = r.role_id
+		LEFT JOIN sys_user u ON ur.user_id = u.user_id
+		WHERE
+			u.user_id = #{role}
+	</select>
+
+</mapper>
